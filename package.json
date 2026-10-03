@@ -4,6 +4,7 @@
   "description": "Two-layer security gate for coding agents: hard rules plus Kev-4B, enforced in a Cline beforeTool hook.",
   "type": "module",
   "private": true,
+  "license": "MIT",
   "cline": {
     "plugins": [
       {

@@ -159,4 +159,4 @@ All tests run in a disposable folder under `/tmp` with fake secrets and fake net
 
 ## License
 
-TBD
+MIT, see [LICENSE](LICENSE).
