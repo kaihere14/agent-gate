@@ -122,8 +122,10 @@ Use an absolute path when pointing Cline at the lab, for example `cline -c /tmp/
 ## Project layout
 
 ```
-plugin/    gate.ts, normalize.ts, rules.ts, kev.ts, policy.ts, log.ts,
+plugin/    gate.ts (the Cline hook), normalize.ts, rules.ts, kev.ts, policy.ts, log.ts,
            kev-policy.txt + kev-examples.txt (Kev instructions)
+plugin/utils/  config.ts (env settings), input.ts (parse a call), checks.ts (rules, then Kev),
+               record.ts (log records), result.ts (what the hook returns)
 skill/     SKILL.md, advisory guidance for the agent
 tests/     cases.json, kev-eval.ts (full eval), sweep.ts (threshold sweep),
            examples.test.ts + kev-health.test.ts (bun test), run.ts, bun-test.d.ts, out/ (eval output, ignored)
