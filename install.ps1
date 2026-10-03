@@ -2,15 +2,14 @@
 # that the Kev server is reachable. Never starts or stops Kev.
 #
 # From a clone:   powershell -ExecutionPolicy Bypass -File .\install.ps1 [-WithKev] [-Uninstall]
-# Without one:    $env:AGENTGATE_REPO = "<owner>/agent-gate"
-#                 irm https://raw.githubusercontent.com/<owner>/agent-gate/main/install.ps1 | iex
+# Without one:    irm https://raw.githubusercontent.com/kaihere14/agent-gate/main/install.ps1 | iex
 #
 #   -WithKev     also clone Kev into $env:KEV_DIR (default ~\kev) and install its
 #                dependencies with uv; it prints the command to start the server
 #   -Uninstall   remove the skill and an installed copy of the plugin
 #
 # Env: CLINE_DIR (default ~\.cline, same as Cline), AGENTGATE_REPO (owner/name on
-# GitHub, needed only without a clone), AGENTGATE_REF (default main),
+# GitHub, default kaihere14/agent-gate, used only without a clone), AGENTGATE_REF (default main),
 # KEV_URL (default http://localhost:8008/v1/systemone), KEV_DIR (default ~\kev).
 param([switch]$WithKev, [switch]$Uninstall)
 $ErrorActionPreference = "Stop"
@@ -22,6 +21,7 @@ $Marker = ".installed-by-agent-gate"
 $KevUrl = if ($env:KEV_URL) { $env:KEV_URL } else { "http://localhost:8008/v1/systemone" }
 $KevDir = if ($env:KEV_DIR) { $env:KEV_DIR } else { Join-Path $HOME "kev" }
 $Ref = if ($env:AGENTGATE_REF) { $env:AGENTGATE_REF } else { "main" }
+$Repo = if ($env:AGENTGATE_REPO) { $env:AGENTGATE_REPO } else { "kaihere14/agent-gate" }
 
 function Say($m) { Write-Host "==> $m" }
 function Warn($m) { Write-Host "warning: $m" -ForegroundColor Yellow }
@@ -44,12 +44,11 @@ $Src = $null
 if ($PSScriptRoot -and (Test-Path (Join-Path $PSScriptRoot "plugin\gate.ts"))) {
   $Src = (Resolve-Path $PSScriptRoot).Path
 } else {
-  if (-not $env:AGENTGATE_REPO) { Die "no clone found; set `$env:AGENTGATE_REPO = '<owner>/agent-gate' to download it" }
   $Tmp = Join-Path ([IO.Path]::GetTempPath()) ("agent-gate-" + [guid]::NewGuid())
   New-Item -ItemType Directory -Path $Tmp | Out-Null
-  Say "downloading $($env:AGENTGATE_REPO)@$Ref"
+  Say "downloading $Repo@$Ref"
   $Zip = Join-Path $Tmp "src.zip"
-  Invoke-WebRequest -UseBasicParsing -Uri "https://codeload.github.com/$($env:AGENTGATE_REPO)/zip/$Ref" -OutFile $Zip
+  Invoke-WebRequest -UseBasicParsing -Uri "https://codeload.github.com/$Repo/zip/$Ref" -OutFile $Zip
   Expand-Archive -Path $Zip -DestinationPath $Tmp
   $Src = (Get-ChildItem -Path $Tmp -Directory | Select-Object -First 1).FullName
   if (-not (Test-Path (Join-Path $Src "plugin\gate.ts"))) { Die "download does not contain plugin\gate.ts" }

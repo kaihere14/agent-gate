@@ -3,14 +3,14 @@
 # check that the Kev server is reachable. Never starts or stops Kev.
 #
 # From a clone:   ./install.sh [--with-kev] [--uninstall]
-# Without one:    curl -fsSL https://raw.githubusercontent.com/<owner>/agent-gate/main/install.sh | AGENTGATE_REPO=<owner>/agent-gate bash
+# Without one:    curl -fsSL https://raw.githubusercontent.com/kaihere14/agent-gate/main/install.sh | bash
 #
 #   --with-kev    also clone Kev into $KEV_DIR (default ~/kev) and install its
 #                 dependencies with uv; it prints the command to start the server
 #   --uninstall   remove the skill link and an installed copy of the plugin
 #
 # Env: CLINE_DIR (default ~/.cline, same as Cline), AGENTGATE_REPO (owner/name on
-# GitHub, needed only without a clone), AGENTGATE_REF (default main),
+# GitHub, default kaihere14/agent-gate, used only without a clone), AGENTGATE_REF (default main),
 # KEV_URL (default http://localhost:8008/v1/systemone), KEV_DIR (default ~/kev).
 set -euo pipefail
 
@@ -21,6 +21,7 @@ MARKER=".installed-by-agent-gate"
 KEV_URL="${KEV_URL:-http://localhost:8008/v1/systemone}"
 KEV_DIR="${KEV_DIR:-$HOME/kev}"
 REF="${AGENTGATE_REF:-main}"
+REPO="${AGENTGATE_REPO:-kaihere14/agent-gate}"
 
 with_kev=0
 uninstall=0
@@ -54,12 +55,11 @@ script="${BASH_SOURCE[0]:-}"
 if [ -n "$script" ] && [ -f "$(dirname "$script")/plugin/gate.ts" ]; then
   SRC="$(cd "$(dirname "$script")" && pwd -P)"
 else
-  [ -n "${AGENTGATE_REPO:-}" ] || die "no clone found; set AGENTGATE_REPO=<owner>/agent-gate to download it"
   command -v curl >/dev/null || die "curl is required"
   TMP="$(mktemp -d)"
   trap 'rm -rf "$TMP"' EXIT
-  say "downloading $AGENTGATE_REPO@$REF"
-  curl -fsSL "https://codeload.github.com/$AGENTGATE_REPO/tar.gz/$REF" | tar -xz -C "$TMP"
+  say "downloading $REPO@$REF"
+  curl -fsSL "https://codeload.github.com/$REPO/tar.gz/$REF" | tar -xz -C "$TMP"
   SRC="$(find "$TMP" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
   [ -f "$SRC/plugin/gate.ts" ] || die "download does not contain plugin/gate.ts"
 fi

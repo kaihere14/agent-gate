@@ -77,7 +77,7 @@ The installers copy the plugin to `~/.cline/plugins/agent-gate`, install the ski
 ./install.sh                 # add --with-kev to also clone Kev and install its dependencies
 
 # macOS / Linux, without a clone
-curl -fsSL https://raw.githubusercontent.com/<owner>/agent-gate/main/install.sh | AGENTGATE_REPO=<owner>/agent-gate bash
+curl -fsSL https://raw.githubusercontent.com/kaihere14/agent-gate/main/install.sh | bash
 ```
 
 ```powershell
@@ -85,8 +85,7 @@ curl -fsSL https://raw.githubusercontent.com/<owner>/agent-gate/main/install.sh 
 powershell -ExecutionPolicy Bypass -File .\install.ps1      # add -WithKev to also clone Kev
 
 # Windows, without a clone
-$env:AGENTGATE_REPO = "<owner>/agent-gate"
-irm https://raw.githubusercontent.com/<owner>/agent-gate/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/kaihere14/agent-gate/main/install.ps1 | iex
 ```
 
 Uninstall with `./install.sh --uninstall` or `.\install.ps1 -Uninstall`. Restart Cline after installing.
