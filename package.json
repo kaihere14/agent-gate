@@ -1,0 +1,39 @@
+{
+  "name": "agent-gate",
+  "version": "0.1.0",
+  "description": "Two-layer security gate for coding agents: hard rules plus Kev-4B, enforced in a Cline beforeTool hook.",
+  "type": "module",
+  "private": true,
+  "cline": {
+    "plugins": [
+      {
+        "paths": [
+          "./plugin/gate.ts"
+        ],
+        "capabilities": [
+          "hooks"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun tests/run.ts",
+    "tail": "bun viewer/tail.ts",
+    "flush": "bun viewer/tail.ts flush",
+    "lab": "./lab/setup.sh"
+  },
+  "peerDependencies": {
+    "@cline/sdk": "*"
+  },
+  "peerDependenciesMeta": {
+    "@cline/sdk": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@cline/sdk": "0.0.90",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0"
+  }
+}
